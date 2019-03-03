@@ -1,28 +1,47 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {
+    Switch,
+    Route,
+    Redirect
+} from 'react-router-dom'
+
+import { Frame } from './components'
+
+import routes from './routes'
+
+const navRoutes = routes.filter(route => route.inNav === true)
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
+    render () {
+
+        return (
+            <Frame routes={navRoutes}>
+                <Switch>
+                    {/* 渲染的实际的路由 */}
+                    {
+                        routes.map(route => {
+                            return (
+                                <Route
+                                    key={route.path}
+                                    path={route.path}
+                                    render={(props) => {
+                                        //TODO，权限判断
+                                        return <route.components {...props} />
+                                    }}
+                                />
+                            )
+                        })
+
+                    }
+                    {/**渲染固定路由 */}
+                    <Redirect to="/admin/dashboard" from="/admin" exact />
+                    <Redirect to="/404" />
+                </Switch>
+            </Frame>
+
+
+        );
+    }
 }
 
 export default App;
