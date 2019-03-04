@@ -26,6 +26,7 @@ class App extends Component {
                                     path={route.path}
                                     render={(props) => {
                                         //TODO，权限判断
+                                        // console.log(props)
                                         return <route.components {...props} />
                                     }}
                                 />
