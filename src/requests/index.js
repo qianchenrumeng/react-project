@@ -10,3 +10,7 @@ const ajax = axios.create({
 export const getArticleList = () => {
     return ajax.post('/reactUser')
 }
+
+export const deleteById = (id) => {
+    return ajax.post(`/react/reactNews`)
+}
