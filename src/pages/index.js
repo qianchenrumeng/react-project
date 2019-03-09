@@ -12,8 +12,18 @@ const Article = Loadable({
     loading: Loading
 })
 
+const ArticleEdit = Loadable({
+    loader: () => import('./Article/Edit'),
+    loading: Loading
+})
+
 const Settings = Loadable({
     loader: () => import('./Settings'),
+    loading: Loading
+})
+
+const SettingsEdit = Loadable({
+    loader: () => import('./Settings/Edit'),
     loading: Loading
 })
 
@@ -30,5 +40,7 @@ export {
     Dashboard,
     Article,
     Settings,
-    NotFound
+    NotFound,
+    ArticleEdit,
+    SettingsEdit
 }

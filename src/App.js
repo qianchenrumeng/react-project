@@ -24,6 +24,7 @@ class App extends Component {
                                 <Route
                                     key={route.path}
                                     path={route.path}
+                                    exact={route.isExact}
                                     render={(props) => {
                                         //TODO，权限判断
                                         // console.log(props)

@@ -12,5 +12,13 @@ export const getArticleList = () => {
 }
 
 export const deleteById = (id) => {
+    return ajax.post(`/react/reactDelete`)
+}
+
+export const getNews = () => {
     return ajax.post(`/react/reactNews`)
+}
+
+export const getTable = () => {
+    return ajax.post(`/react/newsTable`)
 }

@@ -1,16 +1,12 @@
-import React, {
-    Component,
-    Fragment
-} from 'react'
+import React, { Component } from 'react'
+import { PagesCard } from '../PagesComponents'
 
 import {
-    Card,
-    Table,
     Button,
     Popover,
-    Modal,
     notification
 } from 'antd'
+
 
 import {
     getArticleList,
@@ -19,34 +15,14 @@ import {
 
 const ButtonGroup = Button.Group
 
-
-
-// const dataSource = Array.from(Array(48).keys()).map(item => {
-//     return {
-//         id: item,
-//         name: '胡彦斌',
-//         pwd: 32,
-//         email: 'qweqweqweqweqwe',
-//         phone: '15121210202',
-//         userId: '7452565'
-//     }
-// })
-
-
-
 export default class Article extends Component {
     constructor() {
         super()
         this.state = {
             dataSource: [],
             isLoading: true,
-            editModalVisible: false,
-            confirmLoading: false,
-            clickDeleteArticleId: null,
-            clickArticleTitle: null
-        }
 
-        //表格有几行几列
+        }
         this.columns = [
             {
                 title: 'id',
@@ -78,7 +54,11 @@ export default class Article extends Component {
                     return (
                         <ButtonGroup >
                             <Popover content={`点击修改${record.username}`}>
-                                <Button size="small" type="primary">修改</Button>
+                                <Button
+                                    size="small"
+                                    type="primary"
+                                    onClick={this.toEdit.bind(this, record)}
+                                >修改</Button>
                             </Popover>
                             <Popover content={`点击删除${record.username}`}>
                                 <Button
@@ -92,7 +72,23 @@ export default class Article extends Component {
                     )
                 }
             }];
-
+    }
+    toEdit (record) {
+        console.log(record)
+        const {
+            id,
+            username,
+            password,
+            email,
+            phone
+        } = record
+        this.props.history.push(`/admin/article/edit/${id}`, {
+            id,
+            username,
+            password,
+            email,
+            phone
+        })
     }
     //删除事件
     handleArticleDelete = (record) => {
@@ -102,7 +98,7 @@ export default class Article extends Component {
         //     .then(res => {
         //         console.log(res)
         //     })
-        //console.log(record)
+        // console.log(record)
         this.setState({
             editModalVisible: true,
             deleteArticleId: record.id,
@@ -110,8 +106,6 @@ export default class Article extends Component {
         })
 
     }
-
-    //删除成功事件
     handleDeleteButtonClick = () => {
         // console.log("yes")
         this.setState({
@@ -121,7 +115,7 @@ export default class Article extends Component {
             deleteById(this.state.clickDeleteArticleId)
                 .then(resp => {
                     if (resp.data.res_code === 200) {
-                        console.log(resp.data)
+                        // console.log(resp.data)
                         this.handleCancelDelete()
                         notification.success({
                             message: resp.data.res_data.errorMesage
@@ -143,9 +137,7 @@ export default class Article extends Component {
         })
     }
 
-
     getData () {
-
         getArticleList()
             .then(resp => {
                 if (resp.data.res_code === 200) {
@@ -167,40 +159,20 @@ export default class Article extends Component {
     componentDidMount () {
         this.getData()
     }
+
     render () {
         return (
-            <Fragment>
-                <Card
-                    title="账号信息管理"
-                    bordered={false}
-                    style={{ margin: '16px' }}
-                >
-                    <Table
-                        dataSource={this.state.dataSource}
-                        columns={this.columns}
-                        loading={this.state.loading}
-                        rowKey={record => record.id}
-                        pagination={{
-                            pageSize: 5,
-                            showSizeChanger: true,
-                            showQuickJumper: true,
-                            pageSizeOptions: ['5', '10', '15'],
-                            hideOnSinglePage: true
-                        }}
-                    />
-                </Card>
-                <Modal
-                    title={`确认删除${this.state.clickArticleTitle}吗?`}
-                    visible={this.state.editModalVisible}
-                    onOk={this.handleDeleteButtonClick}
-                    onCancel={this.handleCancelDelete}
-                    okText="确认删除本条"
-                    cancelText="谢谢提醒，点错了"
-                    confirmLoading={this.state.confirmLoading}
-                >
-                    此操作不可逆
-                </Modal>
-            </Fragment>
+            <PagesCard
+                columns={this.columns}
+                dataSource={this.state.dataSource}
+                isLoading={this.state.isLoading}
+                editModalVisible={this.state.editModalVisible}
+                clickArticleTitle={this.state.clickArticleTitle}
+                handleDeleteButtonClick={this.handleDeleteButtonClick}
+                handleCancelDelete={this.handleCancelDelete}
+                // confirmLoading={this.state.confirmLoading}
+                tableTitle="账号信息管理"
+            ></PagesCard>
         )
     }
 }
